@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-# TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for zls.
 GH_REPO="https://github.com/zigtools/zls"
 TOOL_NAME="zls"
 TOOL_TEST="zls --version"
@@ -31,18 +30,66 @@ list_github_tags() {
 }
 
 list_all_versions() {
-	# TODO: Adapt this. By default we simply list the tag names from GitHub releases.
-	# Change this function if zls has other means of determining installable versions.
 	list_github_tags
+}
+
+get_platform() {
+	local platform=""
+
+	platform="$(uname | tr '[:upper:]' '[:lower:]')"
+	case "$platform" in
+	darwin) platform="macos" ;;
+	esac
+
+	echo -n "$platform"
+}
+
+get_arch() {
+	local arch=""
+
+	case "$(uname -m)" in
+	x86_64 | amd64) arch="x86_64" ;;
+	i686 | i386) arch="x86" ;;
+	aarch64 | arm64) arch="aarch64" ;;
+	*)
+		echo "Arch '$(uname -m)' not supported!" >&2
+		exit 1
+		;;
+	esac
+
+	echo -n $arch
+}
+
+get_extname() {
+	version="$1"
+	extname=tar.gz
+
+	case "$version" in
+	0.10.0) extname=tar.zst ;;
+	0.?.*) extname=tar.xz ;;
+	esac
+
+	echo -n "$extname"
 }
 
 download_release() {
 	local version filename url
 	version="$1"
 	filename="$2"
+	platform="$(get_platform)"
+	arch="$(get_arch)"
+	extname="$(get_extname "$version")"
 
-	# TODO: Adapt the release URL convention for zls
-	url="$GH_REPO/archive/v${version}.tar.gz"
+	url="$GH_REPO/releases/download/${version}/zls-${arch}-${platform}.${extname}"
+
+	case "$version" in
+	0.10.0)
+		url="$GH_REPO/releases/download/${version}/${arch}-${platform}.${extname}"
+		;;
+	0.?.*)
+		url="$GH_REPO/releases/download/${version}/${arch}-${platform}.${extname}"
+		;;
+	esac
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
@@ -51,7 +98,7 @@ download_release() {
 install_version() {
 	local install_type="$1"
 	local version="$2"
-	local install_path="${3%/bin}/bin"
+	local install_path="${3%/bin}"
 
 	if [ "$install_type" != "version" ]; then
 		fail "asdf-$TOOL_NAME supports release installs only"
@@ -61,10 +108,16 @@ install_version() {
 		mkdir -p "$install_path"
 		cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
 
-		# TODO: Assert zls executable exists.
 		local tool_cmd
 		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
-		test -x "$install_path/$tool_cmd" || fail "Expected $install_path/$tool_cmd to be executable."
+		case "$version" in
+		0.1.0)
+			mkdir "$install_path/bin"
+			mv "$install_path/$tool_cmd" "$install_path/bin"
+			;;
+		esac
+		chmod +x "$install_path/bin/$tool_cmd"
+		test -x "$install_path/bin/$tool_cmd" || fail "Expected $install_path/$tool_cmd to be executable."
 
 		echo "$TOOL_NAME $version installation was successful!"
 	) || (
