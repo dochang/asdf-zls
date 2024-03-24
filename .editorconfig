@@ -10,3 +10,13 @@ insert_final_newline = true
 [*.{md,yml,yaml}]
 indent_style = space
 indent_size = 2
+
+[*.json]
+indent_style = space
+indent_size = 2
+
+[bin/**]
+indent_style = tab
+
+[*.bash]
+indent_style = tab
