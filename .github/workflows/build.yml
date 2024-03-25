@@ -16,6 +16,17 @@ jobs:
           - macos-latest
     runs-on: ${{ matrix.os }}
     steps:
+      - name: install GNU tar
+        # GitHub added [1] GNU tar into macos runner but name it "gtar" which
+        # is incompatible with the plugin scripts.
+        #
+        # [1]: https://github.com/actions/runner-images/issues/1534
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew update
+          brew install gnu-tar
+          echo "/usr/local/opt/gnu-tar/libexec/gnubin" >> "$GITHUB_PATH"
+          # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#adding-a-system-path
       - name: asdf_plugin_test
         uses: asdf-vm/actions/plugin-test@v2
         with:
