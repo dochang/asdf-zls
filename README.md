@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD041 -->
 <div align="center">
 
 # asdf-zls [![Build](https://github.com/dochang/asdf-zls/actions/workflows/build.yml/badge.svg)](https://github.com/dochang/asdf-zls/actions/workflows/build.yml) [![Lint](https://github.com/dochang/asdf-zls/actions/workflows/lint.yml/badge.svg)](https://github.com/dochang/asdf-zls/actions/workflows/lint.yml)
