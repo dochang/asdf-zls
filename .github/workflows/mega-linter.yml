@@ -15,6 +15,12 @@ on:
       - main
       - master
 
+permissions:
+  issues: write
+  pull-requests: write
+  # For GitHub Comment Reporter
+  # https://megalinter.io/latest/reporters/GitHubCommentReporter/
+
 # Comment env block if you do not want to apply fixes
 env:
   # Apply linter fixes configuration
