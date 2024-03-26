@@ -20,3 +20,18 @@ jobs:
         uses: docker://rhysd/actionlint:1.6.23
         with:
           args: -color
+
+  commitlint:
+    runs-on: ubuntu-latest
+    container:
+      image: commitizen/commitizen:latest
+      options: --user 1001
+      # https://github.com/actions/runner/issues/2033#issuecomment-1598547465
+      # https://github.com/actions/runner/blob/8415f13babf8199551f817eb16b718dcdd5b31e2/images/Dockerfile#L38
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check commits
+        run: |
+          cz check --rev-range 401cb2d..HEAD
