@@ -20,7 +20,15 @@ commands:
             # canonical path.
             #
             # https://discuss.circleci.com/t/circle-working-directory-doesnt-expand/17007/5
-            asdf plugin test zls "$PLUGIN_DIR" --asdf-plugin-gitref "$CIRCLE_SHA1" "zls --version"
+            asdf plugin test zls "$PLUGIN_DIR" --asdf-plugin-gitref "$CIRCLE_SHA1" "zls --version" # DevSkim: ignore DS126858
+            #
+            # Fix false positive from DevSkim.
+            #
+            # `CIRCLE_SHA1` is just a variable, not an algorithm.
+            #
+            # https://github.com/microsoft/DevSkim/wiki/Suppressions
+            # https://github.com/Microsoft/DevSkim/blob/main/guidance/DS126858.md
+            # https://circleci.com/docs/variables/#built-in-environment-variables
 
 jobs:
   MegaLinter:
