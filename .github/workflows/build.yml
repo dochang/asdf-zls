@@ -28,6 +28,6 @@ jobs:
           echo "/usr/local/opt/gnu-tar/libexec/gnubin" >> "$GITHUB_PATH"
           # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#adding-a-system-path
       - name: asdf_plugin_test
-        uses: asdf-vm/actions/plugin-test@v2
+        uses: asdf-vm/actions/plugin-test@v3
         with:
           command: zls --version
