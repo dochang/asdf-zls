@@ -1,7 +1,10 @@
 <!-- markdownlint-disable MD041 -->
 <div align="center">
 
-# asdf-zls [![Build](https://github.com/dochang/asdf-zls/actions/workflows/build.yml/badge.svg)](https://github.com/dochang/asdf-zls/actions/workflows/build.yml) [![Lint](https://github.com/dochang/asdf-zls/actions/workflows/lint.yml/badge.svg)](https://github.com/dochang/asdf-zls/actions/workflows/lint.yml)
+# asdf-zls
+
+[![Build](https://github.com/dochang/asdf-zls/actions/workflows/build.yml/badge.svg)](https://github.com/dochang/asdf-zls/actions/workflows/build.yml) [![Lint](https://github.com/dochang/asdf-zls/actions/workflows/lint.yml/badge.svg)](https://github.com/dochang/asdf-zls/actions/workflows/lint.yml)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/dochang/asdf-zls/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/dochang/asdf-zls/tree/main)
 
 [zls](https://github.com/zigtools/zls) plugin for the [asdf version manager](https://asdf-vm.com).
 
