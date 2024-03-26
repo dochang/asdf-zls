@@ -1,0 +1,112 @@
+version: 2.1
+
+commands:
+  install_asdf:
+    steps:
+      - run:
+          name: install asdf
+          command: |
+            git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.0
+            echo 'export ASDF_DIR="$HOME/.asdf"' >> "$BASH_ENV"
+            echo '. "$HOME/.asdf/asdf.sh"' >> "$BASH_ENV"
+
+  asdf_plugin_test:
+    steps:
+      - run:
+          name: test
+          command: |
+            eval "PLUGIN_DIR=${CIRCLE_WORKING_DIRECTORY/#\~/$HOME}"
+            # Have to expand `~` manually.  CircleCI does not use the
+            # canonical path.
+            #
+            # https://discuss.circleci.com/t/circle-working-directory-doesnt-expand/17007/5
+            asdf plugin test zls "$PLUGIN_DIR" --asdf-plugin-gitref "$CIRCLE_SHA1" "zls --version" # DevSkim: ignore DS126858
+            #
+            # Fix false positive from DevSkim.
+            #
+            # `CIRCLE_SHA1` is just a variable, not an algorithm.
+            #
+            # https://github.com/microsoft/DevSkim/wiki/Suppressions
+            # https://github.com/Microsoft/DevSkim/blob/main/guidance/DS126858.md
+            # https://circleci.com/docs/variables/#built-in-environment-variables
+
+jobs:
+  MegaLinter:
+    environment:
+      DEFAULT_WORKSPACE: /root/project
+    docker:
+      - image: oxsecurity/megalinter-go:v7
+        # checkov:skip=CKV_CIRCLECIPIPELINES_2:prefer mutable but stable tags
+    steps:
+      - checkout
+      - run:
+          command: |
+            sh /entrypoint.sh
+      - store_artifacts:
+          path: megalinter-reports
+
+  commitlint:
+    docker:
+      - image: commitizen/commitizen:latest
+        # checkov:skip=CKV_CIRCLECIPIPELINES_1:prefer mutable but stable tags
+    steps:
+      - checkout
+      - run:
+          command: |
+            cz check --rev-range 401cb2d..HEAD
+
+  plugin_test:
+    docker:
+      - image: cimg/base:current
+        # checkov:skip=CKV_CIRCLECIPIPELINES_2:prefer mutable but stable tags
+    steps:
+      - checkout
+      - install_asdf
+      - asdf_plugin_test
+
+  plugin_test_macos:
+    macos:
+      xcode: 15.0.0
+    steps:
+      - checkout
+      - run:
+          name: install GNU tar
+          command: |
+            brew update
+            brew install gnu-tar
+            echo 'export PATH=/usr/local/opt/gnu-tar/libexec/gnubin:"$PATH"' >> "$BASH_ENV"
+            # https://circleci.com/docs/env-vars/#parameters-and-bash-environment
+      - install_asdf
+      - asdf_plugin_test
+
+  lint:
+    docker:
+      - image: cimg/base:current
+        # checkov:skip=CKV_CIRCLECIPIPELINES_2:prefer mutable but stable tags
+    steps:
+      - checkout
+      - install_asdf
+      - run:
+          name: install asdf plugins
+          command: |
+            asdf plugin add shellcheck https://github.com/luizm/asdf-shellcheck.git
+            asdf plugin add shfmt https://github.com/luizm/asdf-shfmt.git
+            asdf install
+      - run:
+          command: |
+            scripts/lint.bash
+
+workflows:
+  MegaLinter:
+    jobs:
+      - MegaLinter
+
+  Lint:
+    jobs:
+      - lint
+      - commitlint
+
+  Build:
+    jobs:
+      - plugin_test
+      - plugin_test_macos
