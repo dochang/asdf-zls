@@ -28,6 +28,7 @@ jobs:
       DEFAULT_WORKSPACE: /root/project
     docker:
       - image: oxsecurity/megalinter-go:v7
+        # checkov:skip=CKV_CIRCLECIPIPELINES_2:prefer mutable but stable tags
     steps:
       - checkout
       - run:
@@ -39,6 +40,7 @@ jobs:
   commitlint:
     docker:
       - image: commitizen/commitizen:latest
+        # checkov:skip=CKV_CIRCLECIPIPELINES_1:prefer mutable but stable tags
     steps:
       - checkout
       - run:
@@ -48,6 +50,7 @@ jobs:
   plugin_test:
     docker:
       - image: cimg/base:current
+        # checkov:skip=CKV_CIRCLECIPIPELINES_2:prefer mutable but stable tags
     steps:
       - checkout
       - install_asdf
@@ -71,6 +74,7 @@ jobs:
   lint:
     docker:
       - image: cimg/base:current
+        # checkov:skip=CKV_CIRCLECIPIPELINES_2:prefer mutable but stable tags
     steps:
       - checkout
       - install_asdf
