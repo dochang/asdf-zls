@@ -62,9 +62,10 @@ get_arch() {
 
 get_extname() {
 	version="$1"
-	extname=tar.gz
+	extname=tar.xz
 
 	case "$version" in
+	0.11.0) extname=tar.gz ;;
 	0.10.0) extname=tar.zst ;;
 	0.?.*) extname=tar.xz ;;
 	esac
@@ -111,7 +112,7 @@ install_version() {
 		local tool_cmd
 		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
 		case "$version" in
-		0.1.0)
+		0.12.0 | 0.1.0)
 			mkdir "$install_path/bin"
 			mv "$install_path/$tool_cmd" "$install_path/bin"
 			;;

@@ -20,7 +20,7 @@ download_release "$ASDF_INSTALL_VERSION" "$release_file"
 strip_components=1
 case "$ASDF_INSTALL_VERSION" in
 0.1.0) ;;
-0.10.0 | 0.?.*) strip_components="0" ;;
+0.12.0 | 0.10.0 | 0.?.*) strip_components="0" ;;
 esac
 tar -xaf "$release_file" -C "$ASDF_DOWNLOAD_PATH" "--strip-components=$strip_components" || fail "Could not extract $release_file"
 
