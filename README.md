@@ -12,10 +12,14 @@
 
 # Contents
 
+<!-- markdown-link-check-disable -->
+<!-- markdown-link-check reports 404 for these links. -->
+<!-- Disable this false positive. -->
 - [Dependencies](#dependencies)
 - [Install](#install)
 - [Contributing](#contributing)
 - [License](#license)
+<!-- markdown-link-check-enable -->
 
 # Dependencies
 
