@@ -25,8 +25,10 @@ jobs:
         run: |
           brew update
           brew install gnu-tar
-          echo "/usr/local/opt/gnu-tar/libexec/gnubin" >> "$GITHUB_PATH"
+          echo "$(brew --prefix)/opt/gnu-tar/libexec/gnubin" >> "$GITHUB_PATH"
           # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#adding-a-system-path
+          # https://formulae.brew.sh/formula/gnu-tar
+          # https://docs.brew.sh/Manpage#--prefix---unbrewed---installed-formula-
       - name: asdf_plugin_test
         uses: asdf-vm/actions/plugin-test@v3
         with:
