@@ -17,10 +17,9 @@ release_file="$ASDF_DOWNLOAD_PATH/$TOOL_NAME-$ASDF_INSTALL_VERSION.$extname"
 download_release "$ASDF_INSTALL_VERSION" "$release_file"
 
 #  Extract contents of the file into the download directory
-strip_components=1
+strip_components=0
 case "$ASDF_INSTALL_VERSION" in
-0.1.0) ;;
-0.12.0 | 0.10.0 | 0.?.*) strip_components="0" ;;
+0.11.0 | 0.1.0) strip_components=1 ;;
 esac
 tar -xaf "$release_file" -C "$ASDF_DOWNLOAD_PATH" "--strip-components=$strip_components" || fail "Could not extract $release_file"
 

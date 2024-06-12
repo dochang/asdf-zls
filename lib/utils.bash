@@ -112,7 +112,13 @@ install_version() {
 		local tool_cmd
 		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
 		case "$version" in
-		0.12.0 | 0.1.0)
+		0.1.0)
+			mkdir "$install_path/bin"
+			mv "$install_path/$tool_cmd" "$install_path/bin"
+			;;
+		0.11.0 | 0.10.0 | 0.?.0)
+			;;
+		*)
 			mkdir "$install_path/bin"
 			mv "$install_path/$tool_cmd" "$install_path/bin"
 			;;
