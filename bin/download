@@ -21,7 +21,7 @@ strip_components=0
 case "$ASDF_INSTALL_VERSION" in
 0.11.0 | 0.1.0) strip_components=1 ;;
 esac
-tar -xaf "$release_file" -C "$ASDF_DOWNLOAD_PATH" "--strip-components=$strip_components" || fail "Could not extract $release_file"
+tar -xf "$release_file" -C "$ASDF_DOWNLOAD_PATH" "--strip-components=$strip_components" || fail "Could not extract $release_file"
 
 # Remove the tar.gz file since we don't need to keep it
 rm "$release_file"
