@@ -116,8 +116,7 @@ install_version() {
 			mkdir "$install_path/bin"
 			mv "$install_path/$tool_cmd" "$install_path/bin"
 			;;
-		0.11.0 | 0.10.0 | 0.?.0)
-			;;
+		0.11.0 | 0.10.0 | 0.?.0) ;;
 		*)
 			mkdir "$install_path/bin"
 			mv "$install_path/$tool_cmd" "$install_path/bin"
