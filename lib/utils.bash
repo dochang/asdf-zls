@@ -82,7 +82,6 @@ download_release() {
 	arch="$(get_arch)"
 	extname="$(get_extname "$version")"
 
-	#url="$GH_REPO/releases/download/${version}/zls-${arch}-${platform}.${extname}"
 	url="$ZIGTOOLS_URL/zls-${platform}-${arch}-${version}.${extname}"
 
 	case "$version" in
