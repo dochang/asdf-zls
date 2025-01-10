@@ -5,6 +5,7 @@ set -euo pipefail
 GH_REPO="https://github.com/zigtools/zls"
 TOOL_NAME="zls"
 TOOL_TEST="zls --version"
+ZIGTOOLS_URL="https://builds.zigtools.org"
 
 fail() {
 	echo -e "asdf-$TOOL_NAME: $*"
@@ -81,7 +82,8 @@ download_release() {
 	arch="$(get_arch)"
 	extname="$(get_extname "$version")"
 
-	url="$GH_REPO/releases/download/${version}/zls-${arch}-${platform}.${extname}"
+	#url="$GH_REPO/releases/download/${version}/zls-${arch}-${platform}.${extname}"
+	url="$ZIGTOOLS_URL/zls-${platform}-${arch}-${version}.${extname}"
 
 	case "$version" in
 	0.10.0)
