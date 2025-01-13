@@ -5,6 +5,7 @@ set -euo pipefail
 GH_REPO="https://github.com/zigtools/zls"
 TOOL_NAME="zls"
 TOOL_TEST="zls --version"
+ZIGTOOLS_URL="https://builds.zigtools.org"
 
 fail() {
 	echo -e "asdf-$TOOL_NAME: $*"
@@ -30,7 +31,8 @@ list_github_tags() {
 }
 
 list_all_versions() {
-	list_github_tags
+	list_github_tags | grep -v '0.1.0' | grep -v '0.2.0'
+	# v0.1.0 & v0.2.0 are not available on https://builds.zigtools.org/
 }
 
 get_platform() {
@@ -61,14 +63,7 @@ get_arch() {
 }
 
 get_extname() {
-	version="$1"
-	extname=tar.xz
-
-	case "$version" in
-	0.11.0) extname=tar.gz ;;
-	0.10.0) extname=tar.zst ;;
-	0.?.*) extname=tar.xz ;;
-	esac
+	local extname=tar.xz
 
 	echo -n "$extname"
 }
@@ -79,18 +74,9 @@ download_release() {
 	filename="$2"
 	platform="$(get_platform)"
 	arch="$(get_arch)"
-	extname="$(get_extname "$version")"
+	extname="$(get_extname)"
 
-	url="$GH_REPO/releases/download/${version}/zls-${arch}-${platform}.${extname}"
-
-	case "$version" in
-	0.10.0)
-		url="$GH_REPO/releases/download/${version}/${arch}-${platform}.${extname}"
-		;;
-	0.?.*)
-		url="$GH_REPO/releases/download/${version}/${arch}-${platform}.${extname}"
-		;;
-	esac
+	url="$ZIGTOOLS_URL/zls-${platform}-${arch}-${version}.${extname}"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
@@ -106,22 +92,11 @@ install_version() {
 	fi
 
 	(
-		mkdir -p "$install_path"
-		cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
+		mkdir -p "$install_path/bin"
 
 		local tool_cmd
 		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
-		case "$version" in
-		0.1.0)
-			mkdir "$install_path/bin"
-			mv "$install_path/$tool_cmd" "$install_path/bin"
-			;;
-		0.11.0 | 0.10.0 | 0.?.0) ;;
-		*)
-			mkdir "$install_path/bin"
-			mv "$install_path/$tool_cmd" "$install_path/bin"
-			;;
-		esac
+		cp "$ASDF_DOWNLOAD_PATH/$tool_cmd" "$install_path/bin"
 		chmod +x "$install_path/bin/$tool_cmd"
 		test -x "$install_path/bin/$tool_cmd" || fail "Expected $install_path/$tool_cmd to be executable."
 

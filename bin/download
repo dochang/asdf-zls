@@ -10,18 +10,16 @@ source "${plugin_dir}/lib/utils.bash"
 
 mkdir -p "$ASDF_DOWNLOAD_PATH"
 
-extname="$(get_extname "$ASDF_INSTALL_VERSION")"
+extname="$(get_extname)"
 release_file="$ASDF_DOWNLOAD_PATH/$TOOL_NAME-$ASDF_INSTALL_VERSION.$extname"
 
 # Download tar.gz file to the download directory
 download_release "$ASDF_INSTALL_VERSION" "$release_file"
 
 #  Extract contents of the file into the download directory
-strip_components=0
-case "$ASDF_INSTALL_VERSION" in
-0.11.0 | 0.1.0) strip_components=1 ;;
-esac
-tar -xf "$release_file" -C "$ASDF_DOWNLOAD_PATH" "--strip-components=$strip_components" || fail "Could not extract $release_file"
+tar -xf "$release_file" -C "$ASDF_DOWNLOAD_PATH" --warning=no-timestamp || fail "Could not extract $release_file"
+# Use `no-timestamp` to avoid noisy timestamp warnings.  It's an issue from
+# zls prebuilt archives < v0.13.0.
 
 # Remove the tar.gz file since we don't need to keep it
 rm "$release_file"
