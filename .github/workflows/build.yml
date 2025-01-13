@@ -24,7 +24,7 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: |
           brew update
-          brew install gnu-tar
+          brew list --versions gnu-tar >/dev/null || brew install gnu-tar
           echo "$(brew --prefix)/opt/gnu-tar/libexec/gnubin" >> "$GITHUB_PATH"
           # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#adding-a-system-path
           # https://formulae.brew.sh/formula/gnu-tar
