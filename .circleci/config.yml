@@ -40,6 +40,8 @@ jobs:
       - run:
           name: Setup environment variables
           command: |
+            echo "export CI_JOB_URL=$CIRCLE_BUILD_URL" >> "$BASH_ENV"
+            # Export `CI_JOB_URL` for MegaLinter API Reporter
             echo "export DEFAULT_WORKSPACE=$CIRCLE_WORKING_DIRECTORY" >> "$BASH_ENV"
             . "$BASH_ENV"
       - run:
@@ -103,7 +105,8 @@ jobs:
 workflows:
   MegaLinter:
     jobs:
-      - MegaLinter
+      - MegaLinter:
+          context: megalinter
 
   Lint:
     jobs:
