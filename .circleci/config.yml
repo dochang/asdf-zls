@@ -6,9 +6,26 @@ commands:
       - run:
           name: install asdf
           command: |
-            git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.0
-            echo 'export ASDF_DIR="$HOME/.asdf"' >> "$BASH_ENV"
-            echo '. "$HOME/.asdf/asdf.sh"' >> "$BASH_ENV"
+            ASDF_ROOT="$(mktemp -d)/asdf"
+            # `mktemp` on codecov doesn't support long options, use short
+            # options instead.
+
+            PLATFORM="$(uname | tr '[:upper:]' '[:lower:]')"
+            ARCH="$(uname -m)"
+            case "$ARCH" in
+            x86_64) ARCH="amd64" ;;
+            esac
+
+            ASDF_PKG="${ASDF_ROOT}/pkg/asdf.tar.gz"
+            curl --output "${ASDF_PKG}" --create-dirs --location --silent --show-error "https://github.com/asdf-vm/asdf/releases/download/v0.17.0/asdf-v0.17.0-${PLATFORM}-${ARCH}.tar.gz"
+
+            ASDF_BIN="${ASDF_ROOT}/bin"
+            mkdir -p "${ASDF_BIN}"
+            tar x -f "${ASDF_PKG}" -C "${ASDF_BIN}"
+            chmod +x "${ASDF_BIN}/asdf"
+
+            echo 'export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"' >> "$BASH_ENV"
+            echo "export PATH=\"${ASDF_BIN}:\$PATH\"" >> "$BASH_ENV"
 
   asdf_plugin_test:
     steps:
