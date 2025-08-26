@@ -76,7 +76,7 @@ download_release() {
 	arch="$(get_arch)"
 	extname="$(get_extname)"
 
-	url="$ZIGTOOLS_URL/zls-${platform}-${arch}-${version}.${extname}"
+	url="$ZIGTOOLS_URL/zls-${arch}-${platform}-${version}.${extname}"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
