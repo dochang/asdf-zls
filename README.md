@@ -1,3 +1,5 @@
+**THIS REPOSITORY IS NO LONGER MAINTAINED. USE [asdf-zig](https://github.com/asdf-community/asdf-zig) TO INSTALL ZLS.**
+
 <!-- markdownlint-disable MD041 -->
 <div align="center">
 
